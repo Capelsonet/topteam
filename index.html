@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Top Team Performance | Executive Briefing</title>
+  <style>
+    :root{
+      --kf-forest:#00634F;
+      --kf-darksky:#005971;
+      --kf-emerald:#009B77;
+      --kf-bright:#05C690;
+      --kf-lime:#8DC63F;
+      --kf-aqua:#00ADBB;
+      --kf-gray:#929192;
+      --kf-lightgray:#DAD8D6;
+      --kf-purple:#A3238E;
+      --kf-darkblue:#00173B;
+      --kf-white:#FFFFFF;
+      --kf-offwhite:#F7F8FA;
+      --kf-black:#1A1A1A;
+      --shadow:0 12px 30px rgba(0,23,59,.08);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:Segoe UI,system-ui,-apple-system,sans-serif;background:var(--kf-offwhite);color:var(--kf-black)}
+    .app{display:flex;min-height:100vh}
+    .sidebar{width:250px;background:var(--kf-darkblue);color:#fff;position:sticky;top:0;height:100vh;padding:24px 0;display:flex;flex-direction:column}
+    .brand{padding:0 22px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .brand h1{font-size:18px;line-height:1.2;margin:0 0 8px}
+    .brand p{margin:0;color:rgba(255,255,255,.72);font-size:12px;line-height:1.5}
+    .nav{padding:18px 0;display:flex;flex-direction:column;gap:4px}
+    .nav button{all:unset;cursor:pointer;padding:10px 22px;color:rgba(255,255,255,.68);font-size:13px;line-height:1.4}
+    .nav button.active,.nav button:hover{color:#fff;background:rgba(5,198,144,.12);border-left:3px solid var(--kf-bright);padding-left:19px}
+    .side-note{margin-top:auto;padding:18px 22px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;color:rgba(255,255,255,.72);line-height:1.6}
+    .main{flex:1;overflow:auto}
+    section{display:none;padding:48px 54px 72px;max-width:1150px}
+    section.active{display:block}
+    .eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--kf-emerald);font-weight:700;margin-bottom:10px}
+    h2{font-size:34px;line-height:1.15;color:var(--kf-darkblue);margin:0 0 14px}
+    .lede{font-size:17px;line-height:1.75;color:#334;max-width:840px}
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:30px 0}
+    .kpi{background:#fff;border:1px solid #e6e8ef;border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+    .kpi .label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#657}
+    .kpi .value{font-size:32px;font-weight:700;color:var(--kf-darkblue);margin:8px 0 6px}
+    .kpi .text{font-size:13px;line-height:1.6;color:#4c5566}
+    .grid-2{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin:22px 0}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:22px 0}
+    .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:22px 0}
+    .card{background:#fff;border:1px solid #e6e8ef;border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+    .card h3{margin:0 0 10px;font-size:20px;line-height:1.3;color:var(--kf-darkblue)}
+    .card p,.card li{font-size:14px;line-height:1.75;color:#435061}
+    .card ul{margin:10px 0 0 18px;padding:0}
+    .hero-band{background:linear-gradient(135deg,var(--kf-darkblue),var(--kf-darksky));color:#fff;border-radius:24px;padding:28px 30px;box-shadow:var(--shadow);margin:28px 0}
+    .hero-band h3{margin:0 0 10px;font-size:24px;line-height:1.3}
+    .hero-band p{margin:0;font-size:15px;line-height:1.8;color:rgba(255,255,255,.86);max-width:860px}
+    table{width:100%;border-collapse:collapse;background:#fff;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);margin:22px 0}
+    th{background:var(--kf-darkblue);color:#fff;font-size:13px;text-align:left;padding:12px 14px}
+    td{padding:12px 14px;border-bottom:1px solid #edf0f5;font-size:14px;line-height:1.6;color:#435061;vertical-align:top}
+    tr:last-child td{border-bottom:none}
+    .tag-row{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0}
+    .tag{background:#e9f7f3;color:var(--kf-forest);padding:8px 12px;border-radius:999px;font-size:12px;font-weight:600}
+    .timeline{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:24px 0}
+    .phase{background:#fff;border-top:4px solid var(--kf-emerald);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
+    .phase .step{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--kf-emerald);font-weight:700;margin-bottom:8px}
+    .phase h3{margin:0 0 10px;font-size:19px;color:var(--kf-darkblue)}
+    .phase p{margin:0;font-size:14px;line-height:1.75;color:#435061}
+    .quote{background:#eef7ff;border-left:4px solid var(--kf-aqua);padding:18px 20px;border-radius:12px;font-size:15px;line-height:1.8;color:#304357;margin:22px 0;max-width:820px}
+    .footer{margin-top:30px;padding-top:18px;border-top:1px solid #dde3eb;font-size:12px;color:#667;line-height:1.7}
+    @media (max-width:1050px){
+      .kpi-grid,.grid-4,.timeline{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid-2,.grid-3{grid-template-columns:1fr}
+    }
+    @media (max-width:820px){
+      .app{display:block}
+      .sidebar{position:relative;width:100%;height:auto}
+      section{padding:28px 18px 46px}
+      .kpi-grid,.grid-4,.timeline,.grid-3{grid-template-columns:1fr}
+      h2{font-size:28px}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <h1>Top Team Performance</h1>
+      <p>Executive briefing page built from the client discussion deck.</p>
+    </div>
+    <div class="nav">
+      <button class="active" onclick="showSection('overview', this)">What matters now</button>
+      <button onclick="showSection('case', this)">Why top teams matter</button>
+      <button onclick="showSection('model', this)">6 conditions</button>
+      <button onclick="showSection('journey', this)">3-phase journey</button>
+      <button onclick="showSection('proof', this)">Case studies</button>
+      <button onclick="showSection('capabilities', this)">Korn Ferry edge</button>
+    </div>
+    <div class="side-note">
+      Self-contained HTML for sales conversations, executive briefings, and follow-up sharing.
+    </div>
+  </aside>
+
+  <main class="main">
+    <section id="overview" class="active">
+      <div class="eyebrow">Executive summary</div>
+      <h2>Top team performance is the vehicle for helping CEOs perform now and transform for tomorrow.</h2>
+      <div class="lede">
+        The deck makes a clear commercial case: CEOs cannot execute transformation alone, and most top teams fall short because purpose, process, behavior, leadership, and adaptation are not aligned. Korn Ferry’s offer is a structured team-development journey that diagnoses the current state, aligns the team around a shared purpose and ways of working, and then accelerates progression to sustained high performance.
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="label">Core tension</div>
+          <div class="value">Perform + Transform</div>
+          <div class="text">The deck repeatedly frames the leadership job as delivering short-term performance while reshaping the business for tomorrow.</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Model</div>
+          <div class="value">6</div>
+          <div class="text">High-performance conditions structure the proposition: leadership, purpose, people, process, standards of behavior, and continuous development.</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Journey</div>
+          <div class="value">3 phases</div>
+          <div class="text">Assess the team, align on team purpose and ways of working, then accelerate progression to high performance.</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Signature move</div>
+          <div class="value">2-day offsite</div>
+          <div class="text">The offsite becomes the pivotal moment where diagnosis turns into shared commitments, operating norms, and a practical development plan.</div>
+        </div>
+      </div>
+
+      <div class="hero-band">
+        <h3>The strongest sales framing</h3>
+        <p>Do not sell this as a team-building intervention. Sell it as enterprise execution infrastructure for a CEO agenda under pressure: strategy execution, agility, stakeholder confidence, integration, succession, culture, and transformation.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>What this page should help a buyer decide</h3>
+          <p>Whether their top team is the current bottleneck on performance and transformation, and whether a structured team journey is the right lever to address it.</p>
+        </div>
+        <div class="card">
+          <h3>What differentiates the offer</h3>
+          <p>A research-backed model, enterprise leadership lens, practitioner-led design, and a pathway from diagnosis to offsite to sustained follow-through.</p>
+        </div>
+        <div class="card">
+          <h3>Best audience</h3>
+          <p>CEO, CHRO, Chief of Staff, board-adjacent stakeholders, or sponsors who need a top-team solution tied to strategy delivery rather than generic effectiveness work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="case">
+      <div class="eyebrow">Why now</div>
+      <h2>Why top team performance matters</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>The business context</h3>
+          <p>The deck situates the problem in persistent disruption: digital acceleration, economic and health shocks, and social and environmental pressure. In that environment, top teams need more than execution discipline. They need alignment, agility, and the ability to handle enterprise tradeoffs under uncertainty.</p>
+          <ul>
+            <li>Accelerate innovation and growth</li>
+            <li>Prioritize initiatives against strategy and customer focus</li>
+            <li>Attract and retain top talent through culture and rewards</li>
+            <li>Increase productivity and engagement through clarity and alignment</li>
+            <li>Balance enterprise tradeoffs across brand, capital, and talent</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>The CEO reality</h3>
+          <p>No CEO can go it alone. High-performing top teams move the CEO agenda faster, make the organization more responsive, and help the CEO meet board expectations.</p>
+          <div class="tag-row">
+            <span class="tag">Speed and agility</span>
+            <span class="tag">Stakeholder confidence</span>
+            <span class="tag">Enterprise-first mindset</span>
+            <span class="tag">Strategy execution</span>
+          </div>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Perform</th>
+            <th>Transform</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Drive short-term performance, manage margins, optimize current models, and maintain today’s trajectory.</td>
+            <td>Innovate, lead growth, reshape business and operating models, enter adjacencies, and change future trajectory.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="quote">
+        “We are not just managing quarter to quarter; we have an inspiring vision and a plan for the future.” The deck’s best participant-style statements make the end state tangible: alignment, trust, courage, discipline, and visible enterprise commitment.
+      </div>
+    </section>
+
+    <section id="model">
+      <div class="eyebrow">Framework</div>
+      <h2>The six conditions give the page a strong diagnostic spine.</h2>
+      <div class="grid-3">
+        <div class="card"><h3>Leadership</h3><p>The team leader and organization create the conditions and secure the resources for optimal team performance.</p></div>
+        <div class="card"><h3>Purpose</h3><p>The team’s reason for existing is important, inspiring, and clearly understood through defined priorities and objectives.</p></div>
+        <div class="card"><h3>People</h3><p>The team includes the knowledge, skills, and expertise needed to execute its purpose and works inclusively across perspectives.</p></div>
+        <div class="card"><h3>Process</h3><p>Responsibilities, collective work, decision processes, and performance tracking are explicit and fit for purpose.</p></div>
+        <div class="card"><h3>Standards of behavior</h3><p>Norms are visible, difficult issues are surfaced, and supportive relationships are built without losing accountability.</p></div>
+        <div class="card"><h3>Continuous development</h3><p>The team improves how it works, innovates, and addresses capability gaps as the environment changes.</p></div>
+      </div>
+
+      <div class="hero-band">
+        <h3>Useful conversion move</h3>
+        <p>In a sales conversation, the six conditions help shift the discussion from vague dissatisfaction with the team to a structured diagnosis. That makes the offer feel rigorous, not generic.</p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>The six questions the client is implicitly asking</th>
+            <th>What the page should make visible</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>What is the team’s shared purpose?</td><td>Purpose, enterprise agenda, and the critical few things only this team can do.</td></tr>
+          <tr><td>Who needs to be on the team?</td><td>Composition, talent mix, and sub-team logic.</td></tr>
+          <tr><td>How should work be structured?</td><td>Meeting rhythm, governance, decision rights, and operating model.</td></tr>
+          <tr><td>How should members behave?</td><td>Norms, psychological safety, candor, commitment, and integrity.</td></tr>
+          <tr><td>What kind of leadership is needed?</td><td>CEO role, sponsor role, and conditions-setting.</td></tr>
+          <tr><td>How does the team adapt over time?</td><td>Continuous development, coaching, and change work beyond the offsite.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="journey">
+      <div class="eyebrow">Offer architecture</div>
+      <h2>A three-phase journey turns diagnosis into alignment, then into sustained change.</h2>
+
+      <div class="timeline">
+        <div class="phase">
+          <div class="step">Phase 1</div>
+          <h3>Assess the team’s potential for high performance</h3>
+          <p>Work with the team leader to define purpose, gather survey and interview data, and prepare the offsite around the team’s most important development needs.</p>
+        </div>
+        <div class="phase">
+          <div class="step">Phase 2</div>
+          <h3>Align on team purpose and ways of working</h3>
+          <p>Use a two-day offsite to confirm purpose, clarify accountabilities, define processes and norms, practice real teamwork, and shape stakeholder messaging.</p>
+        </div>
+        <div class="phase">
+          <div class="step">Phase 3</div>
+          <h3>Accelerate progression to high performance</h3>
+          <p>Continue with team coaching, executive coaching, cascading work, organizational change, or culture transformation so the offsite becomes a starting point, not a one-off event.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Illustrative journey components</h3>
+          <ul>
+            <li>Kickoff call and alignment with the team leader</li>
+            <li>Survey plus 1:1 interviews with team members and stakeholders</li>
+            <li>Purpose, accountabilities, process, and norms design</li>
+            <li>Two-day offsite with facilitated real work and speedback</li>
+            <li>Coaching sessions and capstone progress review</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>How to present the offsite</h3>
+          <p>The offsite is not just a workshop. It is the visible moment when the team authors a shared purpose, operating norms, and practical commitments that can be communicated back to stakeholders.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="proof">
+      <div class="eyebrow">Proof</div>
+      <h2>The case studies make the offer concrete.</h2>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>PE-backed industrial organization</h3>
+          <p><strong>Context:</strong> $1.5B revenue, 6,000 employees, disappointed revenue trajectory, weak meeting discipline, low trust, and a first-time CEO learning curve.</p>
+          <p><strong>KF response:</strong> Three-month team development journey, CEO working sessions, survey and interviews, then a two-day offsite focused on collaboration, accountability, enterprise priorities, and candid feedback.</p>
+          <p><strong>Impact:</strong> Clearer diagnosis of pain points, stronger trust, better collaboration, and consensus on an updated operating model with aligned messages for teams.</p>
+        </div>
+        <div class="card">
+          <h3>Global consumer products leadership team</h3>
+          <p><strong>Context:</strong> Mixed-tenure international leadership team with ambitious goals and the need to move from siloed leadership to one enterprise team.</p>
+          <p><strong>KF response:</strong> Team diagnostic against the six conditions, interviews, then sequential working sessions to define purpose, roles, responsibilities, and new ways of working.</p>
+          <p><strong>Impact:</strong> Stronger trust and psychological safety, more enterprise alignment, clearer decision principles, and a more intentional enterprise-first mindset.</p>
+        </div>
+      </div>
+
+      <div class="quote">
+        One of the most persuasive proof elements in the original deck is the CEO quote about moving from being merely more effective at existing work to resetting priorities around the right work for business impact.
+      </div>
+    </section>
+
+    <section id="capabilities">
+      <div class="eyebrow">Why Korn Ferry</div>
+      <h2>Korn Ferry’s edge is the blend of science, enterprise leadership thinking, and practitioner credibility.</h2>
+
+      <div class="grid-4">
+        <div class="card"><h3>Research-backed model</h3><p>The offer is grounded in a clear six-condition team model and enterprise leadership thought leadership.</p></div>
+        <div class="card"><h3>Practitioner-led delivery</h3><p>The deck emphasizes C-suite capable facilitators, coaches, and advisors rather than abstract methodology alone.</p></div>
+        <div class="card"><h3>Systemic reach</h3><p>The proposition extends naturally into coaching, succession, organization design, and culture transformation.</p></div>
+        <div class="card"><h3>Global credibility</h3><p>The deck closes with global scale, client penetration, and awards to reinforce legitimacy.</p></div>
+      </div>
+
+      <div class="hero-band">
+        <h3>Best closing message</h3>
+        <p>Korn Ferry helps top teams become more than effective. It helps them become the enterprise mechanism through which strategy, culture, talent, and transformation actually move.</p>
+      </div>
+
+      <div class="footer">
+        Source basis: Top Team Performance Client Discussion Deck, April 2024. This HTML captures the deck’s core storyline: top teams must perform and transform, six conditions define high performance, a three-phase journey structures the offer, and case studies plus Korn Ferry capability signals reinforce the sales case.
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  function showSection(id, btn){
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelector('.main').scrollTop = 0;
+  }
+</script>
+</body>
+</html>
